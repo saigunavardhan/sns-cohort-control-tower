@@ -107,7 +107,31 @@ python sns/chaos.py --n 10 --seed 21
 
 ---
 
-## 4. Streamlit version: the order to test it
+## 4. Web app version: the order to test it
+
+The web app is a FastAPI server (`sns/server.py`) with a browser page (`sns/web/index.html`). The page loads React, Plotly and fonts from a CDN, so it needs an internet connection. If there is no internet, use the Streamlit or terminal version.
+
+**Step 1. Start the server**
+```
+python -m uvicorn server:app --app-dir sns --port 8000
+```
+Open **http://localhost:8000** in a browser. Stop the server with **Ctrl + C**.
+
+**Step 2. Open the practice envelope and run**
+Type `practice` as the envelope number and `orange meadow pilot lantern` as the four words, then click **Open envelope and run check**. (Or pick any listed release and click **Run check**.)
+
+**Step 3. Read the results, top to bottom**
+- The **verdict**, then **Impact on the analyses** (A1 and A2 on release A, release B and after repair).
+- **Proof:** press **Play the story** to watch the swapped, copied and removed tumors move, and A1 return to its release A value after repair.
+- **How it was checked**, **Evidence** (every sample involved), **Repairs and limits**.
+- **Export:** download `findings.json`, or build the clean cohort for A1 or A2.
+
+**Step 4. A judge's envelope**
+Same as step 2 with the judge's number and words.
+
+---
+
+## 5. Streamlit version: the order to test it
 
 **Step 1. Start the page**
 ```
@@ -123,6 +147,7 @@ In section **2. Choose and run**: choose `envelope: practice` in **New release (
 
 **Step 4. Read the results, top to bottom**
 - The colored **verdict** box (green Ready, orange Conditional, red Blocked, blue Insufficient Evidence).
+- **Watch A1 change:** press **▶ Play the story** to watch the swapped, copied and removed tumors move, and A1 return to its release A value after repair.
 - **Analyses:** for A1 and A2, the status, the verdict, whether the repair restores the original, the reason, and a table with the old release, the new release and the after-repair values.
 - **Findings:** one box per problem, with what it affects, confidence, whether it needs human review, its limitation, and a table of every sample involved.
 - **Proposed repairs**, the **files not in this release**, and the **limitations**.
@@ -137,7 +162,7 @@ Every run is saved with its own name and time in `sns/runs/`, so nothing is over
 
 ---
 
-## 5. How to add a new release
+## 6. How to add a new release
 
 A release is a folder with the same file names as release A: `clinical.tsv`, `survival.tsv`, `protein_rppa.tsv.gz`, `mutation_gene_level.tsv.gz`, `copy_number_gistic.tsv.gz`, and optionally `rna_hiseq.tsv.gz`. Sample IDs must start with `TCGA-`.
 
@@ -169,7 +194,7 @@ python sns/run_tower.py --a data/tcga-brca/releases/practice-B --b envelopes/ope
 
 ---
 
-## 6. What the output means
+## 7. What the output means
 
 **Findings (F1, F2, ...)** are the problems found. The number changes from release to release. Kinds:
 - `sample_swap`: two or more samples traded their data, or a sample now holds another sample's data.
@@ -196,7 +221,7 @@ Worked example: in practice B, A1 `mean_negative` moved from -0.872 to -0.843. T
 
 ---
 
-## 7. A result a judge can verify
+## 8. A result a judge can verify
 
 In practice B, `TCGA-A8-A09K-01` (ER positive) and `TCGA-B6-A0WX-01` (ER negative) traded all their protein values. ERALPHA:
 
@@ -216,7 +241,7 @@ Effect on A1: difference (ER positive mean minus ER negative mean) 3.051 on raw,
 
 ---
 
-## 8. How we tested it
+## 9. How we tested it
 
 - **Organizers' reference answer:** our practice B output has the same findings, kinds, severities and A1 numbers as `format/examples/control-tower-practice-B.json`.
 - **Organizers' validator:** every output passes `format/validate.py`.
@@ -227,7 +252,7 @@ Effect on A1: difference (ER positive mean minus ER negative mean) 3.051 on raw,
 
 ---
 
-## 9. Limitations
+## 10. Limitations
 
 - It sees what changed between two releases, not why it changed.
 - It treats release A as the trusted version. Every finding needs human review.
@@ -239,18 +264,21 @@ Effect on A1: difference (ER positive mean minus ER negative mean) 3.051 on raw,
 
 ---
 
-## 10. Files
+## 11. Files
 
 - `sns/run_tower.py`: the tool, terminal version.
+- `sns/server.py`: the web app's FastAPI server.
+- `sns/web/index.html`: the web app page.
 - `sns/app.py`: the Streamlit page.
-- `sns/engine/`: `release.py` (loading), `diff.py` (finding changes), `impact.py` (analyses, repairs, verdicts), `findings.py` (writing findings.json), `cohort.py` (clean cohort).
+- `sns/swap_replay.py`, `sns/swap_replay_template.html`: the animated A1 replay in the Streamlit page.
+- `sns/engine/`: `release.py` (loading), `diff.py` (finding changes), `impact.py` (analyses, repairs, verdicts), `findings.py` (writing findings.json), `cohort.py` (clean cohort), `viz.py` (data for the web app's charts).
 - `sns/cohort.py`: clean cohort export.
 - `sns/chaos.py`, `sns/make_test_release.py`, `sns/score_release.py`: testing tools.
 - `sns/peek_sample.py`, `sns/show_change.py`: look at real samples.
 
 ---
 
-## 11. Third-party libraries and licenses
+## 12. Third-party libraries and licenses
 
 - pandas (BSD-3-Clause)
 - numpy (BSD-3-Clause)
@@ -258,5 +286,11 @@ Effect on A1: difference (ER positive mean minus ER negative mean) 3.051 on raw,
 - jsonschema (MIT)
 - cryptography (Apache-2.0 or BSD-3-Clause)
 - streamlit (Apache-2.0)
+- plotly (MIT)
+- fastapi (MIT)
+- uvicorn (BSD-3-Clause)
+- python-multipart (Apache-2.0)
+- Web page, loaded from the jsDelivr CDN: React and ReactDOM (MIT), htm (Apache-2.0), plotly.js (MIT)
+- Fonts: IBM Plex Sans and IBM Plex Mono via Google Fonts (SIL Open Font License 1.1)
 
 Data: TCGA via the UCSC Xena TCGA hub and NCI Imaging Data Commons; see `DATA_LICENSES.md`.

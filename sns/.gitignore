@@ -1,2 +1,4 @@
 __pycache__/
 *.pyc
+(echo runs/& echo uploads/) >> sns\.gitignore
+type sns\.gitignore

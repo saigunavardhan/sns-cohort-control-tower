@@ -5,8 +5,8 @@ The organizers' original challenge description is in `README_CHALLENGE.md`.
 **Product:** Cohort Control Tower
 **Track:** Cohort Firewall
 **Team:** SNS
-**Team members:** <name 1>, <name 2>, <name 3>
-**Demo video:** <link>
+**Team members:** Sai Guna Vardhan Vudatala, Nishant Naravarajula, Shravya Ushake
+**Demo video:** [Watch the demo (Google Drive)](https://drive.google.com/drive/folders/1eTEWI1hvT8cqYyvnRcI8ZyK73mfqb9SQ?usp=sharing)
 
 Research use only. No diagnosis, no treatment advice, no clinical claims.
 

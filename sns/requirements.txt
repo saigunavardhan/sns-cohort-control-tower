@@ -1,7 +1,10 @@
-pandas>=2.0
+pandas
 numpy
 pyarrow
 jsonschema
 cryptography
 streamlit
 plotly
+fastapi
+uvicorn
+python-multipart

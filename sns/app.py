@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
+from swap_replay import build_html
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -135,7 +137,12 @@ VERDICT_STYLE.get(verdict, st.info)(f"### Verdict: {verdict}")
 st.write(doc.get("question", ""))
 st.caption(f"Release A: {st.session_state['a']}  |  Release B: {st.session_state['b']}  |  "
            f"{st.session_state['seconds']} s  |  saved as {out.relative_to(ROOT)}")
-
+st.header("Watch A1 change")
+replay = build_html(st.session_state["a"], st.session_state["b"], doc)
+if replay:
+    components.html(replay, height=860, scrolling=True)
+else:
+    st.caption("A1 replay not available for this release (clinical or protein file missing).")
 st.header("Analyses")
 for a in doc.get("analyses", []):
     st.subheader(f"{a['id']}: {a.get('description', '')}")

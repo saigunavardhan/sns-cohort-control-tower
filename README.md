@@ -1,102 +1,193 @@
-# OncoSys Cancer AI Lab: Healthcare AI Hackathon
+# SNS Cohort Control Tower
 
-![A real breast cancer slide from TCGA (left) beside an AI model's map of where immune cells are likely (right)](assets/hero_tissue_ai.jpg)
+**Product:** Cohort Control Tower
+**Track:** Cohort Firewall
+**Team:** SNS
+**Team members:** <name 1>, <name 2>, <name 3>
 
-**Left:** a real H&E slide from TCGA (patient TCGA-OL-A5RW). **Right:** a published AI model's estimate of where tumor-infiltrating lymphocytes are. Its highest patch probability is 0.63, and at its own threshold it calls just one patch positive. **Is that result right, and how would anyone check?** That's what you'll build tools for.
+---
 
-<p>
-<a href="data/README.md"><img alt="Explore the data" src="https://img.shields.io/badge/%E2%91%A0%20Explore%20the%20data-0b6e99?style=for-the-badge"></a>
-<a href="products/README.md"><img alt="Pick a mission" src="https://img.shields.io/badge/%E2%91%A1%20Pick%20a%20mission-7a3e9d?style=for-the-badge"></a>
-<a href="https://colab.research.google.com/github/disleveK/oncosys-hackathon-challenge/blob/main/starter/tcga_starter.ipynb"><img alt="Run the starter" src="https://img.shields.io/badge/%E2%91%A2%20Run%20the%20starter-1a7f37?style=for-the-badge"></a>
-</p>
+## What it does and who uses it
 
-You don’t need a GitHub account to open the starter. You’ll need to sign in to Google to run it in Colab. No Google account? [Run it on your computer](#run-it-on-your-computer).
+A research engineer is responsible for a TCGA-BRCA dataset that gets new releases. When a new release arrives, they need to know: did any samples get swapped, duplicated, or dropped? Do those changes affect their analyses? Can the analyses be safely rerun?
 
-- **Explore the data:** seven data packs (tumor molecular data, tissue images, CT scans, cell lines, trial records) plus a 30-minute warm-up. The menu shows included starters, source downloads and viewer links.
-- **Pick a mission:** six featured products and optional custom builds, across two tracks.
-- **Run the starter:** in 15 minutes, download real tumor data, see how each join shrinks the cohort, and open a slide in your browser.
+The workflow is:
 
-## Pick a user, build one workflow
-| Track | What it does | Featured products |
-|---|---|---|
-| **Cohort Firewall** | Catches what could make a result unreliable | [Cohort Control Tower](products/cohort-control-tower.md) · [Cohort Studio](products/cohort-studio.md) |
-| **Evidence Navigator** | Helps someone investigate a result and decide what to do | [Multimodal Case Room](products/multimodal-case-room.md) · [Evidence Copilot](products/evidence-copilot.md) · [Research Claim Auditor](products/research-claim-auditor.md) · [Repair Review Desk](products/repair-review-desk.md) |
+1. Connect two release folders (the previous release A and the new release B).
+2. The tool detects what changed: sample swaps, duplicates, dropped samples, missing values, relabeled IDs.
+3. It reruns the analyses on both releases and on a repaired copy of B.
+4. It writes `findings.json` describing every change, which analyses are affected, and whether a repair restores the original results.
+5. The engineer reviews the findings and decides whether to proceed.
 
-Build a web app, an AI agent, a visual workflow, or a tool that plugs into a notebook. You can also combine two products or [pitch your own](products/README.md#pitch-your-own-lighter-support).
+---
 
-**The bar:** a judge can use your workflow without you narrating, and it shows **one result they can verify** and **one limitation they can inspect.**
+## Setup
 
-**The finale:** a Cohort Control Tower catches a silent change in a new data release, and a different team's Repair Review Desk receives the findings and makes the review decision, live, through the [shared format](format/README.md).
+Clone the repo, then install dependencies:
 
-## The week
-| When | What |
-|---|---|
-| **Wed, Nov 11, 7 PM ET** | Virtual kickoff. Form your team, pick a product, run the starter. [Slides (PDF)](kickoff/Cancer_AI_Lab_Kickoff.pdf) · [recording](https://the-open-accelerator.com/hackathon/upcoming/OncoSysHack/) |
-| **Thu, Nov 12, 1:30 PM ET** | Team registration closes ([form](https://red.ht/toa-oncosys-team-matching), teams of 3–5). Organizers then post **team pairs** in Discord. |
-| **Thu, Nov 12 · Checkpoint 1** | Post **one working result** in Discord: a screenshot or short clip of your tool producing something real from the data. |
-| **Fri, Nov 13 · Checkpoint 2** | **Swap repos with your paired team.** Each team clones the other's repo into a fresh folder, follows its README alone, and posts in Discord what worked and what broke. |
-| **Sat, Nov 14** | In person at the Cabral Center. You open your [sealed envelope](envelopes/README.md) at the start of your Q&A. Code freeze **2:15 PM**; demos 2:30–4:00 PM; awards 4:30 PM. |
-
-Checkpoints aren't part of the rubric, but Checkpoint 2 is the best way to find out, before judges do, whether your project runs on someone else's machine.
-
-## The data packs
-| Pack | One record is… | Status |
-|---|---|---|
-| [TCGA breast cancer](data/tcga-brca/README.md) *(core)* | A tumor sample with clinical, survival, mutation, copy number, RNA and protein data, plus slide links | Ready |
-| [Pathology: PathMNIST](data/pathmnist/README.md) | A labelled colorectal tissue patch | Ready |
-| [Molecular + imaging: CPTAC](data/cptac/README.md) | A lung, colon or kidney cancer case | Ready: protein, slides and CT links |
-| [Imaging: LIDC-IDRI](data/lidc-idri/README.md) | A chest CT with radiologists' nodule marks | Ready |
-| [Prediction: DepMap](data/depmap/README.md) | A cancer cell line | Ready |
-| [Trial records: ClinicalTrials.gov](data/clinical-trials/README.md) | A dated trial record + fictional cases | Ready for practice |
-| [Advanced: CAMELYON17](data/camelyon17/README.md) | A lymph-node slide from one of 5 hospitals | Ready (source-linked) |
-
-**Only join records where a documented match exists.** Tissue patches, cell lines, tumor samples and CT scans describe different things. See [the joining rule](data/README.md#the-joining-rule).
-
-## What's in this repo
-| Path | What it is |
-|---|---|
-| `starter/tcga_starter.ipynb` | The 15-minute starter |
-| `products/` | Six featured product briefs, practice inputs, and pitch-your-own ideas |
-| `data/` | Seven data packs: each with a README, sources and checksums, fetch script, and manifests |
-| `kickoff/` | Kickoff slides (PDF) |
-| `assets/` | The challenge page image |
-| `envelopes/` | Sealed envelopes: the unseen inputs for Saturday, plus a practice envelope ([how they work](envelopes/README.md)) |
-| `format/` | Shared findings format v0.2, validator and reference output |
-| `warmup/wisconsin/` | Optional 30-minute warm-up on a small dataset |
-| [`RULES.md`](RULES.md) · [`DATA_LICENSES.md`](DATA_LICENSES.md) | What's allowed, and how to credit the data |
-| [`SUBMISSION_CHECKLIST.md`](SUBMISSION_CHECKLIST.md) | What to check before the code freeze |
-
-## Run it on your computer
-The local Jupyter route needs no Google account, and no GitHub account is needed to clone this public repo.
-
-```bash
-git clone https://github.com/disleveK/oncosys-hackathon-challenge.git
 ```
-```bash
-cd oncosys-hackathon-challenge
-```
-```bash
+conda create -n sns python=3.11
+conda activate sns
 pip install -r requirements.txt
-```
-```bash
+pip install pyarrow jsonschema cryptography
 python data/tcga-brca/fetch.py
 ```
-```bash
-jupyter notebook starter/tcga_starter.ipynb
+
+---
+
+## Running the tool
+
+### On practice release B (default)
+
+```
+python sns/run_tower.py --out sns/findings_practiceB.json
 ```
 
-## Recommended tools
-Use any stack. Start with the smallest toolset that lets someone else rerun your work. No paid account, hosted app, or AI coding assistant is required.
+With human-readable summary:
 
-| Task | Optional tools | What to practice |
+```
+python sns/run_tower.py --out sns/findings_practiceB.json --pretty
+```
+
+### On an envelope (live demo format)
+
+First unseal the envelope:
+
+```
+python envelopes/unseal.py <number> <four words>
+```
+
+Example (practice envelope):
+
+```
+python envelopes/unseal.py practice orange meadow pilot lantern
+```
+
+Then run the tool:
+
+```
+python sns/run_tower.py --b envelopes/opened/practice/release --out sns/findings_envelope.json --pretty
+```
+
+### Validate the output
+
+```
+python format/validate.py sns/findings_practiceB.json
+```
+
+### Clean Cohort Export
+
+Build a clean sample list from the findings, with repairs applied:
+
+```
+python sns/cohort.py \
+  --release data/tcga-brca/releases/practice-B \
+  --findings sns/findings_practiceB.json \
+  --analysis A1 \
+  --out-dir sns/cohort_out
+```
+
+Outputs: `cohort_samples.csv`, `cohort_steps.json`, `reproduce_cohort.py`.
+
+---
+
+## What the output means
+
+### Verdict levels
+
+- **Ready**: no finding touches this analysis's input files or samples; rerun is safe.
+- **Conditional**: the analysis is affected by a finding, but results moved less than 10%. Rerun after fixing the data errors.
+- **Insufficient Evidence**: too few samples remain after the change to draw conclusions.
+- **Blocked**: a numeric result changed sign, or shifted by 10% or more. The release must not be used until the data error is resolved.
+
+### Finding kinds
+
+- **sample_swap**: two or more samples appear to have had their data exchanged.
+- **duplicate**: a sample ID carries a profile identical to an existing sample.
+- **membership_change**: samples were added, dropped, or renamed.
+- **missing_data**: values or entire files are absent in the new release.
+- **label_conflict**: non-numeric values changed in a way that does not match any other sample.
+- **other**: numeric values changed but no swap or duplicate pattern was found.
+
+### Repair proof
+
+For each analysis, `repair_restores_before: true` means that after applying the listed repairs to release B (excluding duplicates, restoring swapped profiles, adding back dropped samples), the analysis produces the same result as on release A. This confirms the finding is real and the repair is correct.
+
+---
+
+## A result a judge can verify
+
+**Practice release B contains a sample swap in `protein_rppa.tsv.gz`.**
+
+TCGA-A8-A09K-01 and TCGA-B6-A0WX-01 have had their ERALPHA protein profiles exchanged:
+
+| Sample | ERALPHA in raw (A) | ERALPHA in practice-B |
 |---|---|---|
-| Read and check the data | [pandas](https://pandas.pydata.org/), [Polars](https://docs.pola.rs/), or [DuckDB](https://duckdb.org/). For repeatable checks, try [Pandera](https://pandera.readthedocs.io/) or [Great Expectations](https://docs.greatexpectations.io/). [ydata-profiling](https://docs.profiling.ydata.ai/) can help with initial exploration. | Keep sample and patient IDs separate. Record the release, checksums, checks run, and affected samples. Treat a profile report as a starting point, not a verdict. |
-| Compare figures | A notebook or SQL is enough. | Compare figures with their denominators. Test whether reasonable choices about which samples to include change the conclusion. |
-| Work with slides | NCI Imaging Data Commons viewer links in `slide_manifest.csv`; [`idc-index`](https://pypi.org/project/idc-index/) to download | Distinguish diagnostic from frozen slides. Link a slide to a case only when its barcode matches. |
-| Build a reviewer interface | [Streamlit](https://docs.streamlit.io/get-started) or [Gradio](https://www.gradio.app/docs). Try [axe-core](https://github.com/dequelabs/axe-core) or [Lighthouse](https://developer.chrome.com/docs/lighthouse/) for accessibility checks. | Make it possible to trace a headline number to its evidence and reach a decision without the presenter. Test keyboard navigation and whether labels make sense without color. |
-| Use AI responsibly | Any LLM or a local model. Users supply their own key; never commit one. | Let the AI run real queries rather than answer from memory. Show its sources. Make it say when the data can't answer. |
-| Document provenance | The [shared format](format/README.md), a Markdown evidence log, or [W3C PROV](https://www.w3.org/TR/prov-overview/) as background | For each claim, record the release, samples, calculation, limitation, and who should review it. |
-| Check for secrets | [Gitleaks](https://github.com/gitleaks/gitleaks), manually or in pre-commit | Before submitting, check for credentials, tokens, private URLs and restricted files. |
+| TCGA-A8-A09K-01 | 3.43266169795726 | -1.07005186202866 |
+| TCGA-B6-A0WX-01 | -1.07005186202866 | 3.43266169795726 |
 
-## Source and citation
-TCGA data from the UCSC Xena TCGA hub and NCI Imaging Data Commons; full credits in [`DATA_LICENSES.md`](DATA_LICENSES.md). The data is de-identified but patient-derived: research use only, no re-identification, no clinical claims.
+Verify these values directly:
+
+```python
+import pandas as pd
+raw = pd.read_csv("data/tcga-brca/raw/protein_rppa.tsv.gz", sep="\t", index_col=0)
+print(raw.at["ERALPHA", "TCGA-A8-A09K-01"])   # 3.43266169795726
+print(raw.at["ERALPHA", "TCGA-B6-A0WX-01"])   # -1.07005186202866
+
+b = pd.read_csv("data/tcga-brca/releases/practice-B/protein_rppa.tsv.gz", sep="\t", index_col=0)
+print(b.at["ERALPHA", "TCGA-A8-A09K-01"])     # -1.07005186202866
+print(b.at["ERALPHA", "TCGA-B6-A0WX-01"])     # 3.43266169795726
+```
+
+Effect on analysis A1 (mean ER-alpha by ER status):
+
+- mean_negative: -0.872 in raw, -0.843 in practice-B
+- difference (Positive minus Negative): 3.051 in raw, 3.019 in practice-B
+- After repair: analysis restores exactly to the raw values.
+
+---
+
+## Limitations
+
+- Tabular data only: image files, PDFs, and binary formats are not checked.
+- Sample IDs must start with `TCGA-`. IDs in another format are ignored.
+- Near copies in sparse files (like mutation calls, where most values are 0) cannot be reliably told apart from real new samples. This is a known miss and is stated in the finding limitation.
+- The tool sees what changed between two releases, not why. Human review is required to decide whether a change is an error or a valid update.
+- Research use only. No clinical claims should be made from this output.
+
+---
+
+## How we tested it
+
+The chaos tester (`sns/chaos.py`) generates random releases with up to 4 injected changes (swaps, duplicates, drops, edits, near copies, feature drops, subgroup drops, and more), runs the full detection engine, and checks whether every injected change is caught.
+
+Latest results (n=10 releases, seed=21):
+
+- Changes caught: 21 of 21 (100%)
+- Crashes: 0
+- Invalid output files: 0
+- False findings: 0
+
+The two known miss types (near copies in sparse files) are excluded from scoring because they cannot be detected without non-sparse reference data. This is documented as a limitation.
+
+To rerun:
+
+```
+python sns/chaos.py --n 10 --seed 21
+```
+
+---
+
+## Demo video
+
+<link>
+
+---
+
+## Third-party libraries and licenses
+
+- pandas (BSD-3)
+- numpy (BSD-3)
+- pyarrow (Apache-2.0)
+- jsonschema (MIT)
+- cryptography (Apache-2.0 or BSD)

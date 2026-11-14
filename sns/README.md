@@ -191,3 +191,53 @@ python sns/chaos.py --n 10 --seed 21
 - pyarrow (Apache-2.0)
 - jsonschema (MIT)
 - cryptography (Apache-2.0 or BSD)
+
+## 4. Web app (recommended): the order to test it
+
+The web app has a FastAPI backend (`sns/server.py`) and a React page (`sns/web/index.html`). It uses the same engine as the terminal version, so the results are identical.
+
+**Step 1. Start the server**
+```
+python sns/server.py
+```
+It prints `{"url": "http://127.0.0.1:8000"}`. Open http://127.0.0.1:8000 in a browser and keep the terminal open while using the page. The page loads React, Plotly and its fonts from the internet, so the laptop needs a connection.
+
+**Step 2. Open the practice envelope and run the check**
+In the left panel, tab **Envelope**: type `practice` as the number and `orange meadow pilot lantern` as the four words, then click **Open envelope and run check**. The check takes a few seconds.
+
+**Step 3. Read the results, top to bottom**
+- **Top box:** the verdict, the two releases with their sample counts, and the changed samples by type. Practice: Conditional; same count (747 in both releases), but 12 samples changed in `protein_rppa.tsv.gz`: 2 profiles swapped, 5 copied profiles under new IDs, 5 samples lost.
+- **Impact map:** files on the left, findings in the middle, analyses on the right. Colored lines show which file each finding comes from and which analysis it reaches; dotted lines show the files each analysis reads. Practice: A1 affected, A2 left alone. Click a finding to jump to its evidence.
+- **A1 replay:** each dot is one primary tumor (ERALPHA value by ER status). Click **Play the story** to watch the same samples move from Release A to Release B, then to B after the proposed repairs. The three cards show the result at each stage: 3.051, 3.019, 3.051.
+- **A2 bars:** subtype shares in Release A, Release B and after repair. Identical bars mean the result is safe.
+- **Analysis tables:** every value of A1 and A2 on the old release, the new release and after repair.
+- **Proof:** for a swap, the new values of one sample plotted against the old values of the other: every point on the line, largest difference 0.
+- **How it was checked:** the six steps with their counts.
+- **Evidence:** one card per finding with every sample involved.
+- **Repairs and limits:** the proposed repairs (proposals only), files not in the release, and what the check cannot tell you.
+- **Export:** download `findings.json`, and build the clean cohort for A1 or A2 (A1 on practice: 698 samples, 0 duplicates) as a CSV.
+
+**Step 4. A judge's envelope**
+Same as step 2, with the judge's number and four words.
+
+**Step 5. Other releases**
+- Tab **Saved:** every release on the laptop (opened envelopes, `data/tcga-brca/releases/*`, uploads). Choose one, then click **Run check**.
+- Tab **Upload:** give a name, choose the release files, click **Save release**.
+- **Recent checks:** reopen any earlier check without rerunning it.
+
+Every check is saved in `sns/runs/<run id>/` (`findings.json`, the chart data and the cohort files), so nothing is overwritten. The **Dark / Light** button switches the color theme.
+
+**Backend API** (used by the page, also usable directly):
+- `GET /api/releases`: list releases
+- `POST /api/unseal`: open an envelope (`number`, `words`)
+- `POST /api/upload`: save uploaded release files
+- `POST /api/run`: run a check (`release_id`, optional `a_path`)
+- `GET /api/runs` and `GET /api/runs/{run_id}`: list checks, open one
+- `GET /api/runs/{run_id}/findings.json`: download the findings file
+- `POST /api/runs/{run_id}/cohort` and `GET /api/runs/{run_id}/cohort/{analysis}.csv`: build and download a clean cohort
+
+### Streamlit version (alternative)
+```
+streamlit run sns/app.py
+```
+In the sidebar: tab **Sealed envelope**, type the number and the four words, click **Unseal**; choose the release in **New release (B)**; click **Run check**. The page shows the verdict, the A1 replay, the analyses, the findings, the repairs, the limitations and the downloads.

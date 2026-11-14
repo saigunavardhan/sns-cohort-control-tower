@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swap Replay</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface: #fcfcfb; --surface-2: #f2f1ee;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
+    --grid: #e4e3df; --dot: #a9a8a2; --border: #dddcd7;
+    --swap: #2a78d6; --copy: #eb6834; --relabel: #1baf7a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface: #1a1a19; --surface-2: #242423;
+      --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #8f8e88;
+      --grid: #2e2e2c; --dot: #6a6964; --border: #373735;
+      --swap: #3987e5; --copy: #d95926; --relabel: #199e70;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface: #1a1a19; --surface-2: #242423;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #8f8e88;
+    --grid: #2e2e2c; --dot: #6a6964; --border: #373735;
+    --swap: #3987e5; --copy: #d95926; --relabel: #199e70;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface); color: var(--text-primary);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 20px 16px 28px; }
+  h1 { font-size: 20px; margin: 0 0 4px; font-weight: 650; }
+  .sub { color: var(--text-secondary); margin: 0 0 16px; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .tile { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; transition: border-color .3s, background .3s; }
+  .tile.on { border-color: var(--text-primary); background: var(--surface-2); }
+  .tile .k { color: var(--text-secondary); font-size: 12px; }
+  .tile .v { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .tile .d { color: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; color: var(--text-secondary); padding: 7px 12px; font: inherit; cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .seg button.on { background: var(--text-primary); color: var(--surface); }
+  .play { border: 1px solid var(--text-primary); background: var(--text-primary); color: var(--surface);
+          border-radius: 8px; padding: 7px 14px; font: inherit; font-weight: 600; cursor: pointer; }
+  .story { min-height: 44px; margin: 6px 0 4px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; color: var(--text-secondary); font-size: 12px; margin: 6px 0 2px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .chart { position: relative; }
+  svg { width: 100%; height: auto; display: block; }
+  .tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border);
+         border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.12);
+         opacity: 0; transition: opacity .12s; white-space: nowrap; }
+  .tip b { font-weight: 650; } .tip .m { color: var(--text-secondary); }
+  .foot { color: var(--text-muted); font-size: 12px; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+  @media (max-width: 640px) { .tiles { grid-template-columns: 1fr; } .tile .v { font-size: 22px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Analysis A1, replayed across releases</h1>
+  <p class="sub">Each dot is one primary tumor: its ER-alpha protein (RPPA) and its clinical ER label. A1 asks whether the two groups differ.</p>
+  <div class="tiles">
+    <div class="tile" data-f="A"><div class="k">Release A · difference in mean ER-alpha</div><div class="v" id="tA"></div><div class="d" id="dA"></div></div>
+    <div class="tile" data-f="B"><div class="k">Release B · as delivered</div><div class="v" id="tB"></div><div class="d" id="dB"></div></div>
+    <div class="tile" data-f="R"><div class="k">Release B · after proposed repairs</div><div class="v" id="tR"></div><div class="d" id="dR"></div></div>
+  </div>
+  <div class="controls">
+    <button class="play" id="play">▶ Play the story</button>
+    <div class="seg">
+      <button data-f="A" class="on">Release A</button><button data-f="B">Release B</button><button data-f="R">B repaired</button>
+    </div>
+  </div>
+  <div class="story" id="story"></div>
+  <div class="legend" id="legend"></div>
+  <div class="chart" id="chart"><svg id="svg" viewBox="0 0 1000 430" role="img" aria-label="ER-alpha protein by ER status, release A versus B"></svg><div class="tip" id="tip"></div></div>
+  <div class="foot">Tool output for research data checking only, not a clinical result. Limitation: detection uses exact profile matches; a copy with one value altered would appear as an edit, not a copy. Every finding needs human review.</div>
+</div>
+<script>
+const D = __DATA__;
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("svg");
+const W = 1000, H = 430, M = {l: 120, r: 24, t: 20, b: 44}, BAND = 120;
+const LANE = {Positive: 120, Negative: 300};
+const COLOR = {swap: "var(--swap)", copy: "var(--copy)", relabel: "var(--relabel)", removed: "var(--dot)", same: "var(--dot)"};
+const vals = D.points.flatMap(p => [p.a, p.b]).filter(v => v !== null);
+const lo = Math.floor(Math.min(...vals)), hi = Math.ceil(Math.max(...vals));
+const x = v => M.l + (v - lo) / (hi - lo) * (W - M.l - M.r);
+const hash = s => { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return ((h >>> 0) % 10000) / 10000; };
+const el = (tag, attrs, parent = svg) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+const byId = Object.fromEntries(D.points.map(p => [p.id, p]));
+const count = st => D.points.filter(p => p.st === st).length;
+
+// axes
+for (let v = lo; v <= hi; v++) {
+  el("line", {x1: x(v), x2: x(v), y1: M.t, y2: H - M.b, stroke: "var(--grid)", "stroke-width": 1});
+  el("text", {x: x(v), y: H - M.b + 18, "text-anchor": "middle", fill: "var(--text-muted)", "font-size": 12}).textContent = v;
+}
+el("text", {x: (M.l + W - M.r) / 2, y: H - 6, "text-anchor": "middle", fill: "var(--text-secondary)", "font-size": 12}).textContent = "ER-alpha protein level (RPPA, ERALPHA)";
+for (const k in LANE) el("text", {x: M.l - 14, y: LANE[k] + 4, "text-anchor": "end", fill: "var(--text-primary)", "font-size": 13, "font-weight": 600}).textContent = "ER-" + k;
+
+// target state per frame
+for (const p of D.points) p.j = (hash(p.id) - 0.5) * BAND;
+const pos = (er, v) => ({x: x(v), y: LANE[er] + 0});
+function frameState(f) {
+  const s = {};
+  for (const p of D.points) {
+    let t = null;
+    if (f === "A" || f === "R") { if (p.a !== null) t = {...pos(p.erA, p.a), o: 1, ghost: false}; }
+    else if (p.st === "removed") t = {...pos(p.erA, p.a), o: 1, ghost: true};
+    else if (p.b !== null) t = {...pos(p.erB, p.b), o: 1, ghost: false};
+    if (!t) { const any = p.a !== null ? pos(p.erA, p.a) : pos(p.erB, p.b); t = {...any, o: 0, ghost: false}; }
+    s[p.id] = t;
+  }
+  const m = er => {
+    const xs = D.points.filter(p => f === "B" ? (p.st !== "removed" && p.erB === er && p.b !== null) : (p.erA === er && p.a !== null)).map(p => f === "B" ? p.b : p.a);
+    return xs.reduce((a, b) => a + b, 0) / xs.length;
+  };
+  s.__mean = {Positive: m("Positive"), Negative: m("Negative")};
+  return s;
+}
+
+// layers
+const linkLayer = el("g", {}), meanLayer = el("g", {}), dotLayer = el("g", {}), labelLayer = el("g", {});
+const moved = D.points.filter(p => p.st === "swap" || p.st === "relabel");
+const trails = moved.map(p => el("path", {fill: "none", stroke: COLOR[p.st], "stroke-width": 2, "stroke-dasharray": "4 4", opacity: 0}, linkLayer));
+const threads = D.points.filter(p => p.st === "copy" && p.src && byId[p.src]).map(p =>
+  ({p, src: byId[p.src], path: el("path", {fill: "none", stroke: "var(--copy)", "stroke-width": 1.5, opacity: 0}, linkLayer)}));
+const meanLine = {}, meanText = {};
+for (const k in LANE) {
+  meanLine[k] = el("line", {y1: LANE[k] - BAND / 2 - 6, y2: LANE[k] + BAND / 2 + 6, stroke: "var(--text-primary)", "stroke-width": 2}, meanLayer);
+  meanText[k] = el("text", {y: k === "Positive" ? LANE[k] + BAND / 2 + 22 : LANE[k] - BAND / 2 - 10, "text-anchor": "middle", fill: "var(--text-primary)", "font-size": 12, "font-weight": 600}, meanLayer);
+}
+const dots = {};
+for (const p of [...D.points].sort((a, b) => (a.st !== "same") - (b.st !== "same"))) {
+  const hl = p.st !== "same" && p.st !== "removed";
+  dots[p.id] = el("circle", {r: hl ? 6 : 4, fill: COLOR[p.st], stroke: "var(--surface)", "stroke-width": hl ? 2 : 1}, dotLayer);
+}
+const labelled = moved.slice(0, 8);
+const labels = labelled.map(p => el("text", {"font-size": 12, "font-weight": 600, fill: "var(--text-primary)", "text-anchor": "middle"}, labelLayer));
+labelled.forEach((p, i) => labels[i].textContent = p.id.slice(5, 12));
+
+function draw(state, f, t) {
+  for (const p of D.points) {
+    const s = state[p.id], d = dots[p.id];
+    d.setAttribute("cx", s.x); d.setAttribute("cy", s.y + p.j); d.setAttribute("opacity", s.o);
+    if (s.ghost) { d.setAttribute("fill-opacity", 0); d.setAttribute("stroke", "var(--text-secondary)"); d.setAttribute("stroke-dasharray", "2 2"); d.setAttribute("stroke-width", 1.5); }
+    else { const hl = p.st !== "same" && p.st !== "removed"; d.setAttribute("fill-opacity", hl ? 1 : 0.6); d.setAttribute("stroke", "var(--surface)"); d.removeAttribute("stroke-dasharray"); d.setAttribute("stroke-width", hl ? 2 : 1); }
+  }
+  moved.forEach((p, i) => {
+    const s = state[p.id]; if (p.a === null) return;
+    const a = pos(p.erA, p.a), ay = a.y + p.j, sy = s.y + p.j;
+    const bend = (p.erA === "Negative" && p.erB !== "Positive") ? 60 : -60;
+    trails[i].setAttribute("d", `M${a.x},${ay} C${a.x},${ay + bend} ${s.x},${sy + bend} ${s.x},${sy}`);
+    trails[i].setAttribute("opacity", f === "B" ? Math.min(1, t * 1.4) : 0);
+  });
+  labelled.forEach((p, i) => {
+    const s = state[p.id], neg = s.y > (LANE.Positive + LANE.Negative) / 2;
+    labels[i].setAttribute("x", s.x); labels[i].setAttribute("y", s.y + p.j + (neg ? -12 : 22)); labels[i].setAttribute("opacity", s.o);
+  });
+  for (const th of threads) {
+    const s = state[th.p.id], src = state[th.src.id];
+    th.path.setAttribute("d", `M${src.x},${src.y + th.src.j} L${s.x},${s.y + th.p.j}`);
+    th.path.setAttribute("opacity", s.o * 0.8);
+  }
+  for (const k in LANE) {
+    const m = state.__mean[k];
+    meanLine[k].setAttribute("x1", x(m)); meanLine[k].setAttribute("x2", x(m));
+    meanText[k].setAttribute("x", x(m)); meanText[k].textContent = `mean ${m.toFixed(3)}`;
+  }
+}
+
+// tiles, legend, story
+const fmt = v => (typeof v === "number" ? v.toFixed(3) : "n/a");
+const delta = (v, b) => { const d = v - b; return (d >= 0 ? "+" : "") + d.toFixed(3); };
+document.getElementById("tA").textContent = fmt(D.A.difference);
+document.getElementById("dA").textContent = `${D.A.n_positive} positive · ${D.A.n_negative} negative`;
+document.getElementById("tB").textContent = fmt(D.B.difference);
+document.getElementById("dB").textContent = `${D.B.n_positive} positive · ${D.B.n_negative} negative · ${delta(D.B.difference, D.A.difference)}`;
+document.getElementById("tR").textContent = fmt(D.R.difference);
+document.getElementById("dR").textContent = D.restores ? "matches release A exactly" : `${delta(D.R.difference, D.A.difference)} vs release A`;
+const leg = [["unchanged", "var(--dot)"]];
+if (count("swap")) leg.push(["profiles swapped", "var(--swap)"]);
+if (count("copy")) leg.push(["copied profile (new ID)", "var(--copy)"]);
+if (count("relabel")) leg.push(["ER label changed", "var(--relabel)"]);
+document.getElementById("legend").innerHTML = leg.map(([t, c]) => `<span><i class="sw" style="background:${c}"></i>${t}</span>`).join("")
+  + (count("removed") ? `<span><i class="sw" style="border:1.5px dashed var(--text-secondary)"></i>removed from release B</span>` : "")
+  + `<span><i class="sw" style="background:var(--text-primary);border-radius:1px;width:2px;height:12px"></i>group mean</span>`;
+const parts = [];
+const n = (k, one, many) => `${count(k)} ${count(k) === 1 ? one : many}`;
+if (count("swap")) parts.push(`<b style="color:var(--swap)">${n("swap", "tumor", "tumors")}</b> had protein profiles swapped`);
+if (count("copy")) parts.push(`<b style="color:var(--copy)">${n("copy", "new ID", "new IDs")}</b> carry copies of existing profiles`);
+if (count("relabel")) parts.push(`<b style="color:var(--relabel)">${n("relabel", "tumor", "tumors")}</b> changed ER label`);
+if (count("removed")) parts.push(`<b>${n("removed", "tumor was", "tumors were")}</b> removed`);
+const STORY = {
+  A: `<b>Release A.</b> ${D.A.n_samples} tumors. ER-positive tumors carry far more ER-alpha protein: the group means differ by <b>${fmt(D.A.difference)}</b>.`,
+  B: parts.length ? `<b>Release B.</b> ${parts.join("; ")}. The difference moves to <b>${fmt(D.B.difference)}</b>.`
+                  : `<b>Release B.</b> No change reaches the tumors A1 uses. The difference stays at <b>${fmt(D.B.difference)}</b>.`,
+  R: D.restores ? `<b>After repairs.</b> Applying the proposed repairs brings A1 back to <b>${fmt(D.R.difference)}</b>, the release A result, which confirms the findings are real.`
+                : `<b>After repairs.</b> The proposed repairs give <b>${fmt(D.R.difference)}</b> (release A: ${fmt(D.A.difference)}). A reviewer should check the remaining gap.`
+};
+
+// animation
+let cur = frameState("A"), anim = null, timers = [];
+function go(f, ms = 1400) {
+  if (anim) cancelAnimationFrame(anim);
+  const from = JSON.parse(JSON.stringify(cur)), to = frameState(f), t0 = performance.now();
+  document.querySelectorAll("[data-f]").forEach(e => e.classList.toggle("on", e.dataset.f === f));
+  document.getElementById("story").innerHTML = STORY[f];
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const step = now => {
+    const t = Math.min(1, (now - t0) / ms), e = ease(t);
+    for (const id in to) {
+      if (id === "__mean") continue;
+      const a = from[id], b = to[id];
+      cur[id] = {x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e, o: a.o + (b.o - a.o) * e, ghost: e > .5 ? b.ghost : a.ghost};
+    }
+    cur.__mean = {Positive: from.__mean.Positive + (to.__mean.Positive - from.__mean.Positive) * e,
+                  Negative: from.__mean.Negative + (to.__mean.Negative - from.__mean.Negative) * e};
+    draw(cur, f, t);
+    if (t < 1) anim = requestAnimationFrame(step);
+  };
+  anim = requestAnimationFrame(step);
+}
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => { timers.forEach(clearTimeout); go(b.dataset.f); });
+document.getElementById("play").onclick = () => {
+  timers.forEach(clearTimeout); timers = [];
+  go("A", 500);
+  timers.push(setTimeout(() => go("B", 1800), 1400));
+  timers.push(setTimeout(() => go("R", 1800), 6200));
+};
+
+// tooltip
+const tip = document.getElementById("tip"), chart = document.getElementById("chart");
+svg.addEventListener("mousemove", ev => {
+  const r = svg.getBoundingClientRect(), sx = (ev.clientX - r.left) * W / r.width, sy = (ev.clientY - r.top) * H / r.height;
+  let best = null, bd = 144;
+  for (const p of D.points) { const s = cur[p.id]; if (s.o < .3) continue; const d = (s.x - sx) ** 2 + (s.y + p.j - sy) ** 2; if (d < bd) { bd = d; best = p; } }
+  if (!best) { tip.style.opacity = 0; return; }
+  const what = {same: "unchanged", swap: "protein profile swapped in release B", copy: `new ID, profile copied from ${best.src || "another sample"}`,
+                relabel: `ER label changed: ${best.erA} → ${best.erB}`, removed: "removed from release B"}[best.st];
+  tip.innerHTML = `<b>${best.id}</b><br><span class="m">ER label (A → B):</span> ${best.erA ?? "–"} → ${best.erB ?? "–"}<br><span class="m">ER-alpha in A:</span> ${best.a ?? "not present"}<br><span class="m">ER-alpha in B:</span> ${best.st === "removed" ? "not present" : (best.b ?? "not present")}<br><span class="m">${what}</span>`;
+  const cr = chart.getBoundingClientRect();
+  let left = ev.clientX - cr.left + 14; if (left > cr.width - 280) left -= 300;
+  tip.style.left = left + "px"; tip.style.top = (ev.clientY - cr.top + 10) + "px"; tip.style.opacity = 1;
+});
+svg.addEventListener("mouseleave", () => tip.style.opacity = 0);
+
+draw(cur, "A", 1);
+document.getElementById("story").innerHTML = STORY.A;
+const start = (location.hash || "").slice(1);
+if (start === "B" || start === "R") go(start, 1);
+</script>
+</body>
+</html>

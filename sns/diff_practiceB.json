@@ -1,0 +1,227 @@
+{
+  "release_a": "C:\\Users\\gunav\\Sem 4\\hackathon\\oncosys-hackathon-challenge\\data\\tcga-brca\\raw",
+  "release_b": "C:\\Users\\gunav\\Sem 4\\hackathon\\oncosys-hackathon-challenge\\data\\tcga-brca\\releases\\practice-B",
+  "files_only_in_a": [],
+  "files_only_in_b": [],
+  "layers": [
+    {
+      "file": "clinical.tsv",
+      "layout": "long",
+      "content_same": true,
+      "n_samples_a": 1247,
+      "n_samples_b": 1247
+    },
+    {
+      "file": "copy_number_gistic.tsv.gz",
+      "layout": "wide",
+      "content_same": true,
+      "n_samples_a": 1080,
+      "n_samples_b": 1080
+    },
+    {
+      "file": "mutation_gene_level.tsv.gz",
+      "layout": "wide",
+      "content_same": true,
+      "n_samples_a": 791,
+      "n_samples_b": 791
+    },
+    {
+      "file": "protein_rppa.tsv.gz",
+      "layout": "wide",
+      "content_same": false,
+      "n_samples_a": 747,
+      "n_samples_b": 747,
+      "n_features_added": 0,
+      "n_features_removed": 0,
+      "features_added": [],
+      "features_removed": [],
+      "duplicate_ids_a": [],
+      "duplicate_ids_b": [],
+      "numeric": true,
+      "n_common": 742,
+      "n_modified": 2,
+      "removed": [
+        "TCGA-A8-A08J-01",
+        "TCGA-C8-A12Q-01",
+        "TCGA-C8-A26Y-01",
+        "TCGA-E9-A1RH-01",
+        "TCGA-GM-A2DH-01"
+      ],
+      "added": [
+        "TCGA-E2-A106-01",
+        "TCGA-E2-A9RU-01",
+        "TCGA-GM-A5PX-01",
+        "TCGA-LL-A5YN-01",
+        "TCGA-LL-A73Z-01"
+      ],
+      "swaps": [
+        [
+          "TCGA-A8-A09K-01",
+          "TCGA-B6-A0WX-01"
+        ]
+      ],
+      "duplicates": [
+        {
+          "data_owner_in_a": [
+            "TCGA-AR-A1AP-01"
+          ],
+          "ids_sharing_profile_in_b": [
+            "TCGA-AR-A1AP-01",
+            "TCGA-LL-A5YN-01"
+          ],
+          "new_copies": [
+            "TCGA-LL-A5YN-01"
+          ]
+        },
+        {
+          "data_owner_in_a": [
+            "TCGA-C8-A133-01"
+          ],
+          "ids_sharing_profile_in_b": [
+            "TCGA-C8-A133-01",
+            "TCGA-E2-A106-01"
+          ],
+          "new_copies": [
+            "TCGA-E2-A106-01"
+          ]
+        },
+        {
+          "data_owner_in_a": [
+            "TCGA-E9-A1N3-01"
+          ],
+          "ids_sharing_profile_in_b": [
+            "TCGA-E9-A1N3-01",
+            "TCGA-LL-A73Z-01"
+          ],
+          "new_copies": [
+            "TCGA-LL-A73Z-01"
+          ]
+        },
+        {
+          "data_owner_in_a": [
+            "TCGA-E9-A2JT-01"
+          ],
+          "ids_sharing_profile_in_b": [
+            "TCGA-E9-A2JT-01",
+            "TCGA-GM-A5PX-01"
+          ],
+          "new_copies": [
+            "TCGA-GM-A5PX-01"
+          ]
+        },
+        {
+          "data_owner_in_a": [
+            "TCGA-EW-A1PE-01"
+          ],
+          "ids_sharing_profile_in_b": [
+            "TCGA-E2-A9RU-01",
+            "TCGA-EW-A1PE-01"
+          ],
+          "new_copies": [
+            "TCGA-E2-A9RU-01"
+          ]
+        }
+      ],
+      "renamed": [],
+      "relabeled": [],
+      "value_changes": [],
+      "dropped": [
+        "TCGA-A8-A08J-01",
+        "TCGA-C8-A12Q-01",
+        "TCGA-C8-A26Y-01",
+        "TCGA-E9-A1RH-01",
+        "TCGA-GM-A2DH-01"
+      ],
+      "new": []
+    },
+    {
+      "file": "rna_hiseq.tsv.gz",
+      "layout": "wide",
+      "content_same": true,
+      "n_samples_a": 1218,
+      "n_samples_b": 1218
+    },
+    {
+      "file": "survival.tsv",
+      "layout": "long",
+      "content_same": true,
+      "n_samples_a": 1236,
+      "n_samples_b": 1236
+    }
+  ],
+  "coverage": {
+    "n_samples_with_coverage_change": 10,
+    "changes": [
+      {
+        "sample": "TCGA-A8-A08J-01",
+        "lost_files": [
+          "protein_rppa.tsv.gz"
+        ],
+        "gained_files": []
+      },
+      {
+        "sample": "TCGA-C8-A12Q-01",
+        "lost_files": [
+          "protein_rppa.tsv.gz"
+        ],
+        "gained_files": []
+      },
+      {
+        "sample": "TCGA-C8-A26Y-01",
+        "lost_files": [
+          "protein_rppa.tsv.gz"
+        ],
+        "gained_files": []
+      },
+      {
+        "sample": "TCGA-E2-A106-01",
+        "lost_files": [],
+        "gained_files": [
+          "protein_rppa.tsv.gz"
+        ]
+      },
+      {
+        "sample": "TCGA-E2-A9RU-01",
+        "lost_files": [],
+        "gained_files": [
+          "protein_rppa.tsv.gz"
+        ]
+      },
+      {
+        "sample": "TCGA-E9-A1RH-01",
+        "lost_files": [
+          "protein_rppa.tsv.gz"
+        ],
+        "gained_files": []
+      },
+      {
+        "sample": "TCGA-GM-A2DH-01",
+        "lost_files": [
+          "protein_rppa.tsv.gz"
+        ],
+        "gained_files": []
+      },
+      {
+        "sample": "TCGA-GM-A5PX-01",
+        "lost_files": [],
+        "gained_files": [
+          "protein_rppa.tsv.gz"
+        ]
+      },
+      {
+        "sample": "TCGA-LL-A5YN-01",
+        "lost_files": [],
+        "gained_files": [
+          "protein_rppa.tsv.gz"
+        ]
+      },
+      {
+        "sample": "TCGA-LL-A73Z-01",
+        "lost_files": [],
+        "gained_files": [
+          "protein_rppa.tsv.gz"
+        ]
+      }
+    ]
+  }
+}

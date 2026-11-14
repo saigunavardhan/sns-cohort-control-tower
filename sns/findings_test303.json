@@ -1,0 +1,407 @@
+{
+  "format_version": "0.2",
+  "producer": {
+    "team": "SNS",
+    "product": "Cohort Control Tower",
+    "track": "cohort-firewall"
+  },
+  "data": {
+    "dataset": "TCGA-BRCA",
+    "releases": [
+      {
+        "name": "raw",
+        "files": [
+          {
+            "file": "clinical.tsv",
+            "sha256": "39eb3be0fb86e6a577bd2cc01502a7fa5a271e1e1cba294e9dc644ad99580d7f",
+            "hash_of": "content"
+          },
+          {
+            "file": "copy_number_gistic.tsv.gz",
+            "sha256": "057090755b3877806148c7e520cb397850bba18ee223a312b4ccd62d0ee84705",
+            "hash_of": "content"
+          },
+          {
+            "file": "mutation_gene_level.tsv.gz",
+            "sha256": "8f7b02f47a4087aeffae11896dc8537b2b20e3d8bb85594dd77a6ce80828dd99",
+            "hash_of": "content"
+          },
+          {
+            "file": "protein_rppa.tsv.gz",
+            "sha256": "469a91c7247a65e1040518552ed1d09d540e7d5b44ece66e0f5a7cff69850fec",
+            "hash_of": "content"
+          },
+          {
+            "file": "survival.tsv",
+            "sha256": "6c9e18ae9c2b8bacc48cd5a60cde97e8880ae2e84e48df437a0378b17e659b73",
+            "hash_of": "content"
+          }
+        ]
+      },
+      {
+        "name": "test-303",
+        "files": [
+          {
+            "file": "clinical.tsv",
+            "sha256": "70e4b84cabaa0d532a9b88d16dc02588ad1ae5cd9ad9809c004753d8a9bfe9c1",
+            "hash_of": "content"
+          },
+          {
+            "file": "copy_number_gistic.tsv.gz",
+            "sha256": "057090755b3877806148c7e520cb397850bba18ee223a312b4ccd62d0ee84705",
+            "hash_of": "content"
+          },
+          {
+            "file": "mutation_gene_level.tsv.gz",
+            "sha256": "8f7b02f47a4087aeffae11896dc8537b2b20e3d8bb85594dd77a6ce80828dd99",
+            "hash_of": "content"
+          },
+          {
+            "file": "protein_rppa.tsv.gz",
+            "sha256": "469a91c7247a65e1040518552ed1d09d540e7d5b44ece66e0f5a7cff69850fec",
+            "hash_of": "content"
+          },
+          {
+            "file": "survival.tsv",
+            "sha256": "6c9e18ae9c2b8bacc48cd5a60cde97e8880ae2e84e48df437a0378b17e659b73",
+            "hash_of": "content"
+          }
+        ]
+      }
+    ]
+  },
+  "question": "Did release test-303 change anything that affects analyses A1 (Mean ER-alpha (RPPA) in ER-positive vs ER-negative primary tumors (clinical IHC status)) and A2 (Share of primary tumors in each PAM50 RNA-seq subtype (subtyped samples only))?",
+  "verdict": "Conditional",
+  "findings": [
+    {
+      "id": "F1",
+      "kind": "duplicate",
+      "summary": "5 sample IDs in clinical.tsv carry profiles identical to existing samples, while 5 real samples left the file, so the total count looks unchanged.",
+      "severity": "high",
+      "confidence": "high",
+      "evidence": [
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-9729-01",
+          "release": "test-303",
+          "file": "clinical.tsv",
+          "note": "identical to TCGA-A8-A06P-01"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-1989-01",
+          "release": "test-303",
+          "file": "clinical.tsv",
+          "note": "identical to TCGA-B6-A0X5-01"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-8659-01",
+          "release": "test-303",
+          "file": "clinical.tsv",
+          "note": "identical to TCGA-D8-A1JE-01"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-8911-01",
+          "release": "test-303",
+          "file": "clinical.tsv",
+          "note": "identical to TCGA-E2-A1BC-11"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-0527-01",
+          "release": "test-303",
+          "file": "clinical.tsv",
+          "note": "identical to TCGA-OL-A5D8-01"
+        }
+      ],
+      "affects_analyses": [
+        "A2"
+      ],
+      "not_affected_analyses": [
+        "A1"
+      ],
+      "limitation": "Identical profiles strongly suggest copies, not new measurements.",
+      "needs_human_review": true,
+      "detected_by": "exact profile fingerprint shared by more IDs than in the previous release"
+    },
+    {
+      "id": "F2",
+      "kind": "membership_change",
+      "summary": "5 Axillary lymph node dissection alone samples (axillary_lymph_node_stage_method_type) lost their data in clinical.tsv, though the total sample count in this file is unchanged. Axillary lymph node dissection alone samples with data in clinical.tsv: 353 in raw, 349 in test-303.",
+      "severity": "medium",
+      "confidence": "high",
+      "evidence": [
+        {
+          "kind": "sample",
+          "id": "TCGA-AN-A04C-01",
+          "release": "raw",
+          "file": "clinical.tsv",
+          "note": "present in raw, absent in test-303"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-B6-A1KF-01",
+          "release": "raw",
+          "file": "clinical.tsv",
+          "note": "present in raw, absent in test-303"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-C8-A273-01",
+          "release": "raw",
+          "file": "clinical.tsv",
+          "note": "present in raw, absent in test-303"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-E9-A1RD-11",
+          "release": "raw",
+          "file": "clinical.tsv",
+          "note": "present in raw, absent in test-303"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-GM-A3XL-01",
+          "release": "raw",
+          "file": "clinical.tsv",
+          "note": "present in raw, absent in test-303"
+        }
+      ],
+      "affects_analyses": [
+        "A1",
+        "A2"
+      ],
+      "not_affected_analyses": [],
+      "limitation": "Coverage for this subgroup drops; any per-subgroup result that uses this file is affected.",
+      "needs_human_review": true,
+      "detected_by": "sample ID present in the old release and absent in the new one, with no matching profile elsewhere"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "A1",
+      "status": "changed",
+      "before": {
+        "n_samples": 698,
+        "n_positive": 529,
+        "n_negative": 169,
+        "mean_positive": 2.179,
+        "mean_negative": -0.872,
+        "difference": 3.051
+      },
+      "after": {
+        "n_samples": 696,
+        "n_positive": 528,
+        "n_negative": 168,
+        "mean_positive": 2.179,
+        "mean_negative": -0.87,
+        "difference": 3.049
+      },
+      "after_repair": {
+        "n_samples": 698,
+        "n_positive": 529,
+        "n_negative": 169,
+        "mean_positive": 2.179,
+        "mean_negative": -0.872,
+        "difference": 3.051
+      },
+      "repair_restores_before": true,
+      "description": "Mean ER-alpha (RPPA) in ER-positive vs ER-negative primary tumors (clinical IHC status).",
+      "inputs": [
+        "clinical.tsv",
+        "protein_rppa.tsv.gz"
+      ],
+      "uses_columns": {
+        "clinical.tsv": [
+          "breast_carcinoma_estrogen_receptor_status"
+        ],
+        "protein_rppa.tsv.gz": [
+          "ERALPHA"
+        ]
+      },
+      "affected_by": [
+        "F2"
+      ],
+      "verdict": "Conditional",
+      "reason": "touched by F2; largest shift is mean_negative: -0.872 in the old release, -0.87 in the new release, a change of 0.002, which is 0.2% of 0.872 (under 10%, but the data errors must be fixed first)"
+    },
+    {
+      "id": "A2",
+      "status": "changed",
+      "before": {
+        "n_samples": 844,
+        "counts": {
+          "Basal": 141,
+          "Her2": 67,
+          "LumA": 421,
+          "LumB": 192,
+          "Normal": 23
+        },
+        "percent": {
+          "Basal": 16.7,
+          "Her2": 7.9,
+          "LumA": 49.9,
+          "LumB": 22.7,
+          "Normal": 2.7
+        }
+      },
+      "after": {
+        "n_samples": 844,
+        "counts": {
+          "Basal": 140,
+          "Her2": 66,
+          "LumA": 421,
+          "LumB": 194,
+          "Normal": 23
+        },
+        "percent": {
+          "Basal": 16.6,
+          "Her2": 7.8,
+          "LumA": 49.9,
+          "LumB": 23.0,
+          "Normal": 2.7
+        }
+      },
+      "after_repair": {
+        "n_samples": 844,
+        "counts": {
+          "Basal": 141,
+          "Her2": 67,
+          "LumA": 421,
+          "LumB": 192,
+          "Normal": 23
+        },
+        "percent": {
+          "Basal": 16.7,
+          "Her2": 7.9,
+          "LumA": 49.9,
+          "LumB": 22.7,
+          "Normal": 2.7
+        }
+      },
+      "repair_restores_before": true,
+      "description": "Share of primary tumors in each PAM50 RNA-seq subtype (subtyped samples only).",
+      "inputs": [
+        "clinical.tsv"
+      ],
+      "uses_columns": {
+        "clinical.tsv": [
+          "PAM50Call_RNAseq"
+        ]
+      },
+      "affected_by": [
+        "F1",
+        "F2"
+      ],
+      "verdict": "Conditional",
+      "reason": "touched by F1, F2; largest shift is counts.Her2: 67 in the old release, 66 in the new release, a change of 1, which is 1.5% of 67 (under 10%, but the data errors must be fixed first)"
+    }
+  ],
+  "repairs": [
+    {
+      "id": "R1",
+      "action": "exclude",
+      "targets": [
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-9729-01",
+          "release": "test-303",
+          "file": "clinical.tsv"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-1989-01",
+          "release": "test-303",
+          "file": "clinical.tsv"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-8659-01",
+          "release": "test-303",
+          "file": "clinical.tsv"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-8911-01",
+          "release": "test-303",
+          "file": "clinical.tsv"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-ZZ-0527-01",
+          "release": "test-303",
+          "file": "clinical.tsv"
+        }
+      ],
+      "justification": "Exclude the duplicated profiles from analyses that use clinical.tsv.",
+      "addresses": [
+        "F1"
+      ]
+    },
+    {
+      "id": "R2",
+      "action": "flag_for_review",
+      "targets": [
+        {
+          "kind": "sample",
+          "id": "TCGA-AN-A04C-01",
+          "release": "raw",
+          "file": "clinical.tsv"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-B6-A1KF-01",
+          "release": "raw",
+          "file": "clinical.tsv"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-C8-A273-01",
+          "release": "raw",
+          "file": "clinical.tsv"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-E9-A1RD-11",
+          "release": "raw",
+          "file": "clinical.tsv"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-GM-A3XL-01",
+          "release": "raw",
+          "file": "clinical.tsv"
+        }
+      ],
+      "justification": "Ask the data provider why these samples lost data in clinical.tsv; restore them from raw if the loss was unintended.",
+      "addresses": [
+        "F2"
+      ]
+    }
+  ],
+  "sns_run": {
+    "engine_version": "0.2",
+    "generated_at": "2026-11-14T06:05:31+00:00",
+    "subgroup_checks": [
+      {
+        "column": "axillary_lymph_node_stage_method_type",
+        "value": "Axillary lymph node dissection alone",
+        "n_samples": 5,
+        "n_with_value": 4,
+        "share_of_lost": 0.8,
+        "baseline_share": 0.365,
+        "enrichment": 2.19,
+        "used_by_an_analysis": false,
+        "file": "clinical.tsv",
+        "with_data_in_a": 353,
+        "with_data_in_b": 349
+      }
+    ],
+    "files_not_in_release": [
+      "rna_hiseq.tsv.gz"
+    ],
+    "files_not_in_release_note": "not provided in this release; no analysis reads it; not compared"
+  }
+}

@@ -1,0 +1,474 @@
+{
+  "format_version": "0.2",
+  "producer": {
+    "team": "SNS",
+    "product": "Cohort Control Tower",
+    "track": "cohort-firewall"
+  },
+  "data": {
+    "dataset": "TCGA-BRCA",
+    "releases": [
+      {
+        "name": "raw",
+        "files": [
+          {
+            "file": "clinical.tsv",
+            "sha256": "39eb3be0fb86e6a577bd2cc01502a7fa5a271e1e1cba294e9dc644ad99580d7f",
+            "hash_of": "content"
+          },
+          {
+            "file": "copy_number_gistic.tsv.gz",
+            "sha256": "057090755b3877806148c7e520cb397850bba18ee223a312b4ccd62d0ee84705",
+            "hash_of": "content"
+          },
+          {
+            "file": "mutation_gene_level.tsv.gz",
+            "sha256": "8f7b02f47a4087aeffae11896dc8537b2b20e3d8bb85594dd77a6ce80828dd99",
+            "hash_of": "content"
+          },
+          {
+            "file": "protein_rppa.tsv.gz",
+            "sha256": "469a91c7247a65e1040518552ed1d09d540e7d5b44ece66e0f5a7cff69850fec",
+            "hash_of": "content"
+          },
+          {
+            "file": "survival.tsv",
+            "sha256": "6c9e18ae9c2b8bacc48cd5a60cde97e8880ae2e84e48df437a0378b17e659b73",
+            "hash_of": "content"
+          }
+        ]
+      },
+      {
+        "name": "practice",
+        "files": [
+          {
+            "file": "clinical.tsv",
+            "sha256": "39eb3be0fb86e6a577bd2cc01502a7fa5a271e1e1cba294e9dc644ad99580d7f",
+            "hash_of": "content"
+          },
+          {
+            "file": "copy_number_gistic.tsv.gz",
+            "sha256": "057090755b3877806148c7e520cb397850bba18ee223a312b4ccd62d0ee84705",
+            "hash_of": "content"
+          },
+          {
+            "file": "mutation_gene_level.tsv.gz",
+            "sha256": "8f7b02f47a4087aeffae11896dc8537b2b20e3d8bb85594dd77a6ce80828dd99",
+            "hash_of": "content"
+          },
+          {
+            "file": "protein_rppa.tsv.gz",
+            "sha256": "e5ee5f77c9a5dfb3c6ea90d84a47db2866543d3dcaebc5093efb691b8847da5f",
+            "hash_of": "content"
+          },
+          {
+            "file": "survival.tsv",
+            "sha256": "6c9e18ae9c2b8bacc48cd5a60cde97e8880ae2e84e48df437a0378b17e659b73",
+            "hash_of": "content"
+          }
+        ]
+      }
+    ]
+  },
+  "question": "Did release practice change anything that affects analyses A1 (Mean ER-alpha (RPPA) in ER-positive vs ER-negative primary tumors (clinical IHC status)) and A2 (Share of primary tumors in each PAM50 RNA-seq subtype (subtyped samples only))?",
+  "verdict": "Conditional",
+  "findings": [
+    {
+      "id": "F1",
+      "kind": "sample_swap",
+      "summary": "Profiles in protein_rppa.tsv.gz of TCGA-A8-A09K-01 (breast_carcinoma_estrogen_receptor_status=Positive) and TCGA-B6-A0WX-01 (breast_carcinoma_estrogen_receptor_status=Negative) appear exchanged between raw and practice.",
+      "severity": "high",
+      "confidence": "high",
+      "evidence": [
+        {
+          "kind": "sample",
+          "id": "TCGA-A8-A09K-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz",
+          "note": "now holds the raw profile of TCGA-B6-A0WX-01"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-B6-A0WX-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz",
+          "note": "now holds the raw profile of TCGA-A8-A09K-01"
+        },
+        {
+          "kind": "protein",
+          "id": "ERALPHA",
+          "file": "protein_rppa.tsv.gz",
+          "note": "used by an analysis"
+        }
+      ],
+      "affects_analyses": [
+        "A1"
+      ],
+      "not_affected_analyses": [
+        "A2"
+      ],
+      "limitation": "The swap is inferred from exact profile matches trading places; the release notes do not say why.",
+      "needs_human_review": true,
+      "detected_by": "exact profile fingerprint match in both directions"
+    },
+    {
+      "id": "F2",
+      "kind": "duplicate",
+      "summary": "5 sample IDs in protein_rppa.tsv.gz carry profiles identical to existing samples, while 5 real samples left the file, so the total count looks unchanged.",
+      "severity": "high",
+      "confidence": "high",
+      "evidence": [
+        {
+          "kind": "sample",
+          "id": "TCGA-LL-A5YN-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz",
+          "note": "identical to TCGA-AR-A1AP-01"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-E2-A106-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz",
+          "note": "identical to TCGA-C8-A133-01"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-LL-A73Z-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz",
+          "note": "identical to TCGA-E9-A1N3-01"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-GM-A5PX-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz",
+          "note": "identical to TCGA-E9-A2JT-01"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-E2-A9RU-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz",
+          "note": "identical to TCGA-EW-A1PE-01"
+        },
+        {
+          "kind": "protein",
+          "id": "ERALPHA",
+          "file": "protein_rppa.tsv.gz",
+          "note": "used by an analysis"
+        }
+      ],
+      "affects_analyses": [
+        "A1"
+      ],
+      "not_affected_analyses": [
+        "A2"
+      ],
+      "limitation": "Identical profiles strongly suggest copies, not new measurements.",
+      "needs_human_review": true,
+      "detected_by": "exact profile fingerprint shared by more IDs than in the previous release"
+    },
+    {
+      "id": "F3",
+      "kind": "membership_change",
+      "summary": "5 Her2 samples (PAM50Call_RNAseq) lost their data in protein_rppa.tsv.gz, though the total sample count in this file is unchanged. Her2 samples with data in protein_rppa.tsv.gz: 61 in raw, 56 in practice.",
+      "severity": "medium",
+      "confidence": "high",
+      "evidence": [
+        {
+          "kind": "sample",
+          "id": "TCGA-A8-A08J-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz",
+          "note": "present in raw, absent in practice"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-C8-A12Q-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz",
+          "note": "present in raw, absent in practice"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-C8-A26Y-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz",
+          "note": "present in raw, absent in practice"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-E9-A1RH-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz",
+          "note": "present in raw, absent in practice"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-GM-A2DH-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz",
+          "note": "present in raw, absent in practice"
+        }
+      ],
+      "affects_analyses": [
+        "A1"
+      ],
+      "not_affected_analyses": [
+        "A2"
+      ],
+      "limitation": "Coverage for this subgroup drops; any per-subgroup result that uses this file is affected.",
+      "needs_human_review": true,
+      "detected_by": "sample ID present in the old release and absent in the new one, with no matching profile elsewhere"
+    }
+  ],
+  "analyses": [
+    {
+      "id": "A1",
+      "status": "changed",
+      "before": {
+        "n_samples": 698,
+        "n_positive": 529,
+        "n_negative": 169,
+        "mean_positive": 2.179,
+        "mean_negative": -0.872,
+        "difference": 3.051
+      },
+      "after": {
+        "n_samples": 699,
+        "n_positive": 533,
+        "n_negative": 166,
+        "mean_positive": 2.176,
+        "mean_negative": -0.843,
+        "difference": 3.019
+      },
+      "after_repair": {
+        "n_samples": 698,
+        "n_positive": 529,
+        "n_negative": 169,
+        "mean_positive": 2.179,
+        "mean_negative": -0.872,
+        "difference": 3.051
+      },
+      "repair_restores_before": true,
+      "description": "Mean ER-alpha (RPPA) in ER-positive vs ER-negative primary tumors (clinical IHC status).",
+      "inputs": [
+        "clinical.tsv",
+        "protein_rppa.tsv.gz"
+      ],
+      "uses_columns": {
+        "clinical.tsv": [
+          "breast_carcinoma_estrogen_receptor_status"
+        ],
+        "protein_rppa.tsv.gz": [
+          "ERALPHA"
+        ]
+      },
+      "affected_by": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "verdict": "Conditional",
+      "reason": "touched by F1, F2, F3; largest shift is mean_negative: -0.872 in the old release, -0.843 in the new release, a change of 0.029, which is 3.3% of 0.872 (under 10%, but the data errors must be fixed first)"
+    },
+    {
+      "id": "A2",
+      "status": "unchanged",
+      "before": {
+        "n_samples": 844,
+        "counts": {
+          "Basal": 141,
+          "Her2": 67,
+          "LumA": 421,
+          "LumB": 192,
+          "Normal": 23
+        },
+        "percent": {
+          "Basal": 16.7,
+          "Her2": 7.9,
+          "LumA": 49.9,
+          "LumB": 22.7,
+          "Normal": 2.7
+        }
+      },
+      "after": {
+        "n_samples": 844,
+        "counts": {
+          "Basal": 141,
+          "Her2": 67,
+          "LumA": 421,
+          "LumB": 192,
+          "Normal": 23
+        },
+        "percent": {
+          "Basal": 16.7,
+          "Her2": 7.9,
+          "LumA": 49.9,
+          "LumB": 22.7,
+          "Normal": 2.7
+        }
+      },
+      "after_repair": {
+        "n_samples": 844,
+        "counts": {
+          "Basal": 141,
+          "Her2": 67,
+          "LumA": 421,
+          "LumB": 192,
+          "Normal": 23
+        },
+        "percent": {
+          "Basal": 16.7,
+          "Her2": 7.9,
+          "LumA": 49.9,
+          "LumB": 22.7,
+          "Normal": 2.7
+        }
+      },
+      "repair_restores_before": true,
+      "description": "Share of primary tumors in each PAM50 RNA-seq subtype (subtyped samples only).",
+      "inputs": [
+        "clinical.tsv"
+      ],
+      "uses_columns": {
+        "clinical.tsv": [
+          "PAM50Call_RNAseq"
+        ]
+      },
+      "affected_by": [],
+      "verdict": "Ready",
+      "reason": "no finding touches its input files, columns or samples",
+      "note": "not affected by any finding; rerun only to confirm it did not move"
+    }
+  ],
+  "repairs": [
+    {
+      "id": "R1",
+      "action": "restore_from_previous_release",
+      "targets": [
+        {
+          "kind": "sample",
+          "id": "TCGA-A8-A09K-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-B6-A0WX-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz"
+        }
+      ],
+      "justification": "Restore these profiles as they were in raw until the swap is explained.",
+      "addresses": [
+        "F1"
+      ]
+    },
+    {
+      "id": "R2",
+      "action": "exclude",
+      "targets": [
+        {
+          "kind": "sample",
+          "id": "TCGA-LL-A5YN-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-E2-A106-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-LL-A73Z-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-GM-A5PX-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-E2-A9RU-01",
+          "release": "practice",
+          "file": "protein_rppa.tsv.gz"
+        }
+      ],
+      "justification": "Exclude the duplicated profiles from analyses that use protein_rppa.tsv.gz.",
+      "addresses": [
+        "F2"
+      ]
+    },
+    {
+      "id": "R3",
+      "action": "flag_for_review",
+      "targets": [
+        {
+          "kind": "sample",
+          "id": "TCGA-A8-A08J-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-C8-A12Q-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-C8-A26Y-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-E9-A1RH-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz"
+        },
+        {
+          "kind": "sample",
+          "id": "TCGA-GM-A2DH-01",
+          "release": "raw",
+          "file": "protein_rppa.tsv.gz"
+        }
+      ],
+      "justification": "Ask the data provider why these samples lost data in protein_rppa.tsv.gz; restore them from raw if the loss was unintended.",
+      "addresses": [
+        "F3"
+      ]
+    }
+  ],
+  "sns_run": {
+    "engine_version": "0.2",
+    "generated_at": "2026-11-14T06:18:44+00:00",
+    "subgroup_checks": [
+      {
+        "column": "PAM50Call_RNAseq",
+        "value": "Her2",
+        "n_samples": 5,
+        "n_with_value": 5,
+        "share_of_lost": 1.0,
+        "baseline_share": 0.07,
+        "enrichment": 14.27,
+        "used_by_an_analysis": true,
+        "file": "protein_rppa.tsv.gz",
+        "with_data_in_a": 61,
+        "with_data_in_b": 56
+      }
+    ],
+    "files_not_in_release": [
+      "rna_hiseq.tsv.gz"
+    ],
+    "files_not_in_release_note": "not provided in this release; no analysis reads it; not compared"
+  }
+}

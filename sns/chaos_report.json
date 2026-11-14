@@ -1,0 +1,742 @@
+{
+  "summary": {
+    "releases": 10,
+    "crashes": 0,
+    "invalid_files": 0,
+    "changes_caught": "21/21",
+    "catch_rate": 1.0,
+    "by_type": {
+      "blank": "1/1",
+      "drop": "3/3",
+      "drop_feature": "2/2",
+      "edit": "3/3",
+      "mislabel": "1/1",
+      "partial_blank": "4/4",
+      "rename": "3/3",
+      "subgroup_drop": "2/2",
+      "swap": "2/2"
+    },
+    "false_findings": 0,
+    "extra_sample_ids": 0,
+    "subgroup_named": "2/2",
+    "repair_not_restoring": 0,
+    "seconds_total": 388.7
+  },
+  "crashes": [],
+  "repair_not_restoring": [],
+  "releases": [
+    {
+      "seed": 21000,
+      "changes": [
+        "subgroup_drop:protein_rppa.tsv.gz"
+      ],
+      "caught": "1/1",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Conditional",
+      "valid": true,
+      "seconds": 1.5,
+      "answer_key": [
+        {
+          "type": "subgroup_drop",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "membership_change"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [
+                "TCGA-AN-A0AM-01",
+                "TCGA-AR-A24N-01",
+                "TCGA-AR-A24S-01",
+                "TCGA-C8-A12U-01",
+                "TCGA-D8-A1J9-01",
+                "TCGA-EW-A1OZ-01"
+              ],
+              "features": [],
+              "subgroup": "LumB"
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "membership_change",
+          "severity": "medium",
+          "summary": "6 LumB samples (PAM50Call_RNAseq) lost their data in protein_rppa.tsv.gz. LumB samples with data in protein_rppa.tsv.gz: 164 in raw, 158 in chaos-21000."
+        }
+      ]
+    },
+    {
+      "seed": 21001,
+      "changes": [
+        "edit:clinical.tsv",
+        "drop:rna_hiseq.tsv.gz",
+        "partial_blank:protein_rppa.tsv.gz"
+      ],
+      "caught": "3/3",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Conditional",
+      "valid": true,
+      "seconds": 78.7,
+      "answer_key": [
+        {
+          "type": "edit",
+          "file": "clinical.tsv",
+          "expect": [
+            {
+              "kinds": [
+                "label_conflict"
+              ],
+              "file": "clinical.tsv",
+              "samples": [
+                "TCGA-A1-A0SD-01",
+                "TCGA-B6-A1KC-01",
+                "TCGA-BH-A0C7-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "drop",
+          "file": "rna_hiseq.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "membership_change"
+              ],
+              "file": "rna_hiseq.tsv.gz",
+              "samples": [
+                "TCGA-E9-A1RC-01",
+                "TCGA-E9-A24A-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "partial_blank",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "missing_data"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [
+                "TCGA-C8-A12Z-01",
+                "TCGA-D8-A27L-01",
+                "TCGA-E9-A3QA-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "label_conflict",
+          "severity": "medium",
+          "summary": "3 samples in clinical.tsv have changed values (3 values in total) that match no other sample."
+        },
+        {
+          "id": "F2",
+          "kind": "missing_data",
+          "severity": "medium",
+          "summary": "3 samples in protein_rppa.tsv.gz lost some values (117 values in total became empty)."
+        },
+        {
+          "id": "F3",
+          "kind": "membership_change",
+          "severity": "medium",
+          "summary": "2 LumA samples (PAM50Call_RNAseq) lost their data in rna_hiseq.tsv.gz. LumA samples with data in rna_hiseq.tsv.gz: 434 in raw, 432 in chaos-21001."
+        }
+      ]
+    },
+    {
+      "seed": 21002,
+      "changes": [
+        "rename:clinical.tsv",
+        "partial_blank:survival.tsv",
+        "rename:rna_hiseq.tsv.gz"
+      ],
+      "caught": "3/3",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Conditional",
+      "valid": true,
+      "seconds": 78.8,
+      "answer_key": [
+        {
+          "type": "rename",
+          "file": "clinical.tsv",
+          "expect": [
+            {
+              "kinds": [
+                "membership_change"
+              ],
+              "file": "clinical.tsv",
+              "samples": [
+                "TCGA-ZZ-2592-01",
+                "TCGA-ZZ-8330-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "partial_blank",
+          "file": "survival.tsv",
+          "expect": [
+            {
+              "kinds": [
+                "missing_data"
+              ],
+              "file": "survival.tsv",
+              "samples": [
+                "TCGA-A7-A4SD-01",
+                "TCGA-AR-A0TX-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "rename",
+          "file": "rna_hiseq.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "membership_change"
+              ],
+              "file": "rna_hiseq.tsv.gz",
+              "samples": [
+                "TCGA-A7-A4SD-11",
+                "TCGA-BH-A1ES-11"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "membership_change",
+          "severity": "medium",
+          "summary": "2 samples in clinical.tsv changed ID while keeping identical data."
+        },
+        {
+          "id": "F2",
+          "kind": "membership_change",
+          "severity": "medium",
+          "summary": "2 samples in rna_hiseq.tsv.gz changed ID while keeping identical data."
+        },
+        {
+          "id": "F3",
+          "kind": "missing_data",
+          "severity": "medium",
+          "summary": "2 samples in survival.tsv lost some values (4 values in total became empty)."
+        }
+      ]
+    },
+    {
+      "seed": 21003,
+      "changes": [
+        "edit:protein_rppa.tsv.gz",
+        "mislabel:rna_hiseq.tsv.gz"
+      ],
+      "caught": "2/2",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Ready",
+      "valid": true,
+      "seconds": 79.2,
+      "answer_key": [
+        {
+          "type": "edit",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "other"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [
+                "TCGA-A8-A0A7-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "mislabel",
+          "file": "rna_hiseq.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "sample_swap"
+              ],
+              "file": "rna_hiseq.tsv.gz",
+              "samples": [
+                "TCGA-AR-A1AI-01",
+                "TCGA-D8-A140-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "other",
+          "severity": "medium",
+          "summary": "1 sample in protein_rppa.tsv.gz has changed values (13 values in total) that match no other sample."
+        },
+        {
+          "id": "F2",
+          "kind": "sample_swap",
+          "severity": "medium",
+          "summary": "2 samples in rna_hiseq.tsv.gz now look like a different sample than before (likely mislabel with small edits)."
+        }
+      ]
+    },
+    {
+      "seed": 21004,
+      "changes": [
+        "partial_blank:clinical.tsv"
+      ],
+      "caught": "1/1",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Ready",
+      "valid": true,
+      "seconds": 1.3,
+      "answer_key": [
+        {
+          "type": "partial_blank",
+          "file": "clinical.tsv",
+          "expect": [
+            {
+              "kinds": [
+                "missing_data"
+              ],
+              "file": "clinical.tsv",
+              "samples": [
+                "TCGA-OL-A5RZ-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "missing_data",
+          "severity": "medium",
+          "summary": "1 sample in clinical.tsv lost some values (20 values in total became empty)."
+        }
+      ]
+    },
+    {
+      "seed": 21005,
+      "changes": [
+        "drop:copy_number_gistic.tsv.gz"
+      ],
+      "caught": "1/1",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Ready",
+      "valid": true,
+      "seconds": 32.3,
+      "answer_key": [
+        {
+          "type": "drop",
+          "file": "copy_number_gistic.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "membership_change"
+              ],
+              "file": "copy_number_gistic.tsv.gz",
+              "samples": [
+                "TCGA-A7-A13G-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "membership_change",
+          "severity": "medium",
+          "summary": "1 sample lost its data in copy_number_gistic.tsv.gz."
+        }
+      ]
+    },
+    {
+      "seed": 21006,
+      "changes": [
+        "drop:protein_rppa.tsv.gz"
+      ],
+      "caught": "1/1",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Conditional",
+      "valid": true,
+      "seconds": 1.4,
+      "answer_key": [
+        {
+          "type": "drop",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "membership_change"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [
+                "TCGA-A7-A3RF-01",
+                "TCGA-BH-A1EN-01",
+                "TCGA-C8-A12V-01",
+                "TCGA-EW-A2FS-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "membership_change",
+          "severity": "medium",
+          "summary": "4 samples lost their data in protein_rppa.tsv.gz."
+        }
+      ]
+    },
+    {
+      "seed": 21007,
+      "changes": [
+        "subgroup_drop:survival.tsv",
+        "partial_blank:protein_rppa.tsv.gz",
+        "rename:protein_rppa.tsv.gz"
+      ],
+      "caught": "3/3",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Conditional",
+      "valid": true,
+      "seconds": 1.5,
+      "answer_key": [
+        {
+          "type": "subgroup_drop",
+          "file": "survival.tsv",
+          "expect": [
+            {
+              "kinds": [
+                "membership_change"
+              ],
+              "file": "survival.tsv",
+              "samples": [
+                "TCGA-BH-A0AY-11",
+                "TCGA-BH-A0BC-11",
+                "TCGA-BH-A1FD-11",
+                "TCGA-BH-A204-11",
+                "TCGA-E9-A1ND-11"
+              ],
+              "features": [],
+              "subgroup": "Normal"
+            }
+          ]
+        },
+        {
+          "type": "partial_blank",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "missing_data"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [
+                "TCGA-AC-A2BK-01",
+                "TCGA-AO-A0JG-01",
+                "TCGA-EW-A1PB-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "rename",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "membership_change"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [
+                "TCGA-AR-A5QQ-01",
+                "TCGA-BH-A208-11",
+                "TCGA-EW-A6SA-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "membership_change",
+          "severity": "medium",
+          "summary": "3 samples in protein_rppa.tsv.gz changed ID while keeping identical data."
+        },
+        {
+          "id": "F2",
+          "kind": "missing_data",
+          "severity": "medium",
+          "summary": "3 samples in protein_rppa.tsv.gz lost some values (117 values in total became empty)."
+        },
+        {
+          "id": "F3",
+          "kind": "membership_change",
+          "severity": "medium",
+          "summary": "5 Normal samples (PAM50Call_RNAseq) lost their data in survival.tsv. Normal samples with data in survival.tsv: 118 in raw, 113 in chaos-21007."
+        }
+      ]
+    },
+    {
+      "seed": 21008,
+      "changes": [
+        "drop_feature:mutation_gene_level.tsv.gz",
+        "blank:rna_hiseq.tsv.gz",
+        "swap:clinical.tsv"
+      ],
+      "caught": "3/3",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Conditional",
+      "valid": true,
+      "seconds": 107.4,
+      "answer_key": [
+        {
+          "type": "drop_feature",
+          "file": "mutation_gene_level.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "missing_data"
+              ],
+              "file": "mutation_gene_level.tsv.gz",
+              "samples": [],
+              "features": [
+                "SNX18P6"
+              ],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "blank",
+          "file": "rna_hiseq.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "missing_data"
+              ],
+              "file": "rna_hiseq.tsv.gz",
+              "samples": [
+                "TCGA-BH-A0B0-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "swap",
+          "file": "clinical.tsv",
+          "expect": [
+            {
+              "kinds": [
+                "sample_swap"
+              ],
+              "file": "clinical.tsv",
+              "samples": [
+                "TCGA-E2-A154-01",
+                "TCGA-E2-A1B4-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "sample_swap",
+          "severity": "high",
+          "summary": "Profiles in clinical.tsv of TCGA-E2-A154-01 (PAM50Call_RNAseq=LumA, breast_carcinoma_estrogen_receptor_status=Positive) and TCGA-E2-A1B4-01 (PAM50Call_RNAseq=LumA, breast_carcinoma_estrogen_receptor_status=Positive) appear exchanged between raw and chaos-21008."
+        },
+        {
+          "id": "F2",
+          "kind": "missing_data",
+          "severity": "medium",
+          "summary": "1 column of mutation_gene_level.tsv.gz disappeared in chaos-21008."
+        },
+        {
+          "id": "F3",
+          "kind": "missing_data",
+          "severity": "medium",
+          "summary": "1 sample in rna_hiseq.tsv.gz lost all its values, though its ID is still listed."
+        }
+      ]
+    },
+    {
+      "seed": 21009,
+      "changes": [
+        "drop_feature:protein_rppa.tsv.gz",
+        "edit:protein_rppa.tsv.gz",
+        "swap:protein_rppa.tsv.gz"
+      ],
+      "caught": "3/3",
+      "missed": [],
+      "false_findings": [],
+      "extra_sample_ids": 0,
+      "verdict": "Conditional",
+      "valid": true,
+      "seconds": 1.3,
+      "answer_key": [
+        {
+          "type": "drop_feature",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "missing_data"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [],
+              "features": [
+                "BAK"
+              ],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "edit",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "other"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [
+                "TCGA-A1-A0SK-01",
+                "TCGA-AC-A2BM-01",
+                "TCGA-E9-A22B-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        },
+        {
+          "type": "swap",
+          "file": "protein_rppa.tsv.gz",
+          "expect": [
+            {
+              "kinds": [
+                "sample_swap"
+              ],
+              "file": "protein_rppa.tsv.gz",
+              "samples": [
+                "TCGA-C8-A3M8-01",
+                "TCGA-GM-A2DF-01"
+              ],
+              "features": [],
+              "subgroup": null
+            }
+          ]
+        }
+      ],
+      "schema_errors": [],
+      "extra_ids": [],
+      "findings": [
+        {
+          "id": "F1",
+          "kind": "sample_swap",
+          "severity": "high",
+          "summary": "Profiles in protein_rppa.tsv.gz of TCGA-C8-A3M8-01 (breast_carcinoma_estrogen_receptor_status=Positive) and TCGA-GM-A2DF-01 (breast_carcinoma_estrogen_receptor_status=Negative) appear exchanged between raw and chaos-21009."
+        },
+        {
+          "id": "F2",
+          "kind": "other",
+          "severity": "medium",
+          "summary": "3 samples in protein_rppa.tsv.gz have changed values (39 values in total) that match no other sample."
+        },
+        {
+          "id": "F3",
+          "kind": "missing_data",
+          "severity": "medium",
+          "summary": "1 column of protein_rppa.tsv.gz disappeared in chaos-21009."
+        }
+      ]
+    }
+  ]
+}
